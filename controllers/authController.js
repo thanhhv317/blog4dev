@@ -56,10 +56,10 @@ module.exports = {
             
             const user = await Users.findOne({username, status: "ACTIVE"}).exec()
             if (!user) {
-                return res.status(404).json({
+                return res.status(200).json({
                     status: false,
                     data: {
-                        message: 'No user found'
+                        message: 'No user found',
                     }
                 })
             }

@@ -30,12 +30,12 @@ module.exports = {
 
     getCateogies: async (req, res) => {
         try {
-            const category = await Categories.find({status: "ACTIVE"})
+            const category = await Categories.find({status: {$ne: "DELETE"}})
             
             if (!category) return res.status(500).json({
                 status: false,
                 data: {
-                    message: 'There was a problem 3'
+                    message: 'There was a problem'
                 }
             })
             return res.status(200).json({
@@ -49,7 +49,34 @@ module.exports = {
             return res.status(500).json({
                 status: false,
                 data: {
-                    message: 'There was a problem 2'
+                    message: 'There was a problem'
+                }
+            })
+        }
+    },
+
+    getCateogiesForCreatePosts: async (req, res) => {
+        try {
+            const category = await Categories.find({status: "ACTIVE"})
+            
+            if (!category) return res.status(500).json({
+                status: false,
+                data: {
+                    message: 'There was a problem'
+                }
+            })
+            return res.status(200).json({
+                status: true,
+                data: {
+                    category
+                }
+            })
+        } 
+        catch (e) {
+            return res.status(500).json({
+                status: false,
+                data: {
+                    message: 'There was a problem'
                 }
             })
         }
@@ -89,10 +116,11 @@ module.exports = {
     update: async (req, res) => {
         try {
             const { id } = req.params
-            const { name, description } = req.body
+            const { name, description, status } = req.body
             const category = await Categories.updateOne({_id: id}, {
                 name,
                 description,
+                status,
                 updateAt: Date.now()
             })
             if (!category) return res.status(500).json({

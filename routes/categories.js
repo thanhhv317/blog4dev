@@ -7,6 +7,7 @@ const categoriesController = require('../controllers/categoryController')
 
 router.get('/view/:id', categoriesController.getCategory)
 router.get('/list', categoriesController.getCateogies)
+router.get('/list_create_posts', categoriesController.getCateogiesForCreatePosts)
 router.post('/create', [verifyToken, isAdmin], categoriesController.create)
 router.put('/update/:id', [verifyToken,isAdmin], categoriesController.update)
 router.delete('/delete/:id', [verifyToken, isAdmin], categoriesController.delete)

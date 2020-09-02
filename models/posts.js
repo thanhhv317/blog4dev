@@ -9,8 +9,8 @@ const postSchema = new mongoose.Schema({
         required: true
     },
     authorId: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users"
     },
     thumbnail: {
         type: String,
@@ -19,10 +19,12 @@ const postSchema = new mongoose.Schema({
     content: {
         type: String,
     },
-    category: {
-        type: String,
-        default: '[]'
-    },
+    category: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Categories"
+        }
+    ],
     createAt: {
         type: Date,
         default: Date.now()
@@ -30,7 +32,7 @@ const postSchema = new mongoose.Schema({
     status: {
         type: String,
         default: "ACTIVE",
-        enum: ["ACTIVE","INACTIVE","DELETE"]
+        enum: ["ACTIVE", "INACTIVE", "DELETE"]
     },
     updateAt: {
         type: Date
