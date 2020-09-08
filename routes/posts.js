@@ -32,7 +32,7 @@ const upload = multer({ storage: storage })
 
 router.get('/view/:id', postController.getPost)
 router.post('/create', [verifyToken, isAdmin], upload.any(), postController.create)
-router.put('/update/:id', [verifyToken, isAdmin], postController.update)
+router.put('/update/:id', [verifyToken, isAdmin], upload.any(), postController.update)
 router.delete('/delete/:id', [verifyToken, isAdmin], postController.delete)
 router.get('/list', postController.getList);
 
