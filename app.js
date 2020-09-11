@@ -11,6 +11,7 @@ const authRouter = require('./routes/auth');
 const postsRouter = require('./routes/posts');
 const categoriesRouter = require('./routes/categories');
 const commentsRouter = require('./routes/comments');
+const statisticRouter = require('./routes/statistics');
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/blog', {useNewUrlParser: true, useUnifiedTopology: true});
@@ -35,6 +36,7 @@ app.use('/auth', authRouter);
 app.use('/posts', postsRouter);
 app.use('/categories', categoriesRouter);
 app.use('/comments', commentsRouter);
+app.use('/statistics', statisticRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
