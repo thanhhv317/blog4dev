@@ -9,6 +9,7 @@ module.exports = {
       let filter = find ? find : "";
 
       const users = await Users.find({
+        level: 1,
         status: { $ne: "DELETE" },
         $or: [
           { username: new RegExp(filter, "i") },
@@ -151,11 +152,11 @@ module.exports = {
           status: false,
           data: {
             message: "The username already exists",
-          }
+          },
         });
       }
 
-      let usernameTrim = username.replace(/\s/gi,"");
+      let usernameTrim = username.replace(/\s/gi, "");
 
       const user = await Users.create({
         fullname,

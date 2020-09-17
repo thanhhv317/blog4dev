@@ -28,4 +28,6 @@ router.put(
 
 router.get("/list", [verifyToken, isAdmin], commentController.getListComment);
 
+router.get("/list_by_post_id", commentController.getListByPost);
+
 module.exports = router;

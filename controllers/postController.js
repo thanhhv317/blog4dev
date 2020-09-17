@@ -1,6 +1,7 @@
 const Posts = require("../models/posts");
 const { convertText2Slug } = require("../utils/convertText2Slug");
 const { isEmpty } = require("lodash");
+const mongoose = require("mongoose");
 
 module.exports = {
   getPost: async (req, res) => {
@@ -75,7 +76,6 @@ module.exports = {
         },
       });
     } catch (e) {
-      console.log(e);
       return res.status(500).json({
         status: false,
         data: {
@@ -87,7 +87,6 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      console.log(isEmpty(req.files));
       const { id } = req.params;
       const { title, content, category, status } = req.body;
       let categories = [];
@@ -122,7 +121,6 @@ module.exports = {
         },
       });
     } catch (e) {
-      console.log(e);
       return res.status(500).json({
         status: false,
         data: {
@@ -167,26 +165,81 @@ module.exports = {
       const { limit, perpage } = req.query;
       let skip = limit * (perpage - 1);
 
-      const posts = await Posts.find({ status: { $ne: "DELETE" } })
-        .skip(+skip)
-        .limit(+limit);
+      userId = req.userId;
+      if (req.userLevel === 0) {
+        const posts = await Posts.find({
+          status: { $ne: "DELETE" },
+        })
+          .skip(+skip)
+          .limit(+limit);
 
-      const count = await Posts.find({ status: { $ne: "DELETE" } }).count();
+        const count = await Posts.find({
+          status: { $ne: "DELETE" },
+        }).countDocuments();
 
-      if (!posts)
-        return res.status(500).json({
-          status: false,
+        return res.status(200).json({
+          status: true,
           data: {
-            message: "There was a problem",
+            posts,
+            limit,
+            perpage,
+            count,
           },
         });
+      } else {
+        const posts = await Posts.find({
+          status: { $ne: "DELETE" },
+          authorId: userId,
+        })
+          .skip(+skip)
+          .limit(+limit);
+
+        const count = await Posts.find({
+          status: { $ne: "DELETE" },
+          authorId: userId,
+        }).countDocuments();
+
+        return res.status(200).json({
+          status: true,
+          data: {
+            posts,
+            limit,
+            perpage,
+            count,
+          },
+        });
+      }
+    } catch (e) {
+      return res.status(500).json({
+        status: false,
+        data: {
+          message: "There was a problem",
+          error: e,
+        },
+      });
+    }
+  },
+
+  getList4Client: async (req, res) => {
+    try {
+      const { page } = req.query;
+      let limit = 20;
+      let skip = limit * (page - 1);
+      const posts = await Posts.find({ status: "ACTIVE" })
+        .populate({
+          path: "authorId",
+          match: {
+            status: "ACTIVE",
+          },
+          select: "username _id fullname",
+        })
+        .skip(+skip)
+        .limit(limit);
+
       return res.status(200).json({
         status: true,
         data: {
           posts,
-          limit,
-          perpage,
-          count
         },
       });
     } catch (e) {
@@ -194,7 +247,41 @@ module.exports = {
         status: false,
         data: {
           message: "There was a problem",
-          error: e,
+        },
+      });
+    }
+  },
+
+  getListByCategory: async (req, res) => {
+    try {
+      const { cateId, page } = req.query;
+      let limit = 20;
+      let skip = limit * (page - 1);
+      const posts = await Posts.find({
+        status: "ACTIVE",
+        category: cateId,
+      }).populate({
+        path: "authorId",
+        match: {
+          status: "ACTIVE",
+        },
+        select: "username _id fullname",
+      })
+        .select("_id title content createAt slug")
+        .skip(+skip)
+        .limit(limit);
+
+      return res.status(200).json({
+        status: true,
+        data: {
+          posts,
+        },
+      });
+    } catch (e) {
+      return res.status(500).json({
+        status: false,
+        data: {
+          message: "There was a problem",
         },
       });
     }

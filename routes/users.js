@@ -3,7 +3,6 @@ const router = express.Router();
 
 const userController = require("../controllers/userController");
 const verifyToken = require("../utils/verifyToken");
-const isAdmin = require("../utils/isAdmin");
 const isSuperAdmin = require("../utils/isSuperAdmin");
 
 router.get("/list", [verifyToken, isSuperAdmin], userController.getListUser);

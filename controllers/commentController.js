@@ -223,4 +223,26 @@ module.exports = {
       });
     }
   },
+
+  getListByPost: async (req, res) => {
+    try {
+      const { id } = req.query;
+      const comments = await Comments.find({ status: "ACTIVE", postId:id });
+
+      return res.status(200).json({
+        status: true,
+        data: {
+          comments,
+        },
+      });
+    } catch (err) {
+      return res.status(500).json({
+        status: false,
+        data: {
+          message: "There was a problem",
+          e,
+        },
+      });
+    }
+  },
 };
