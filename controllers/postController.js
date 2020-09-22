@@ -233,6 +233,7 @@ module.exports = {
           },
           select: "username _id fullname",
         })
+        .sort({createAt: 'desc'})
         .skip(+skip)
         .limit(limit);
 
@@ -268,6 +269,7 @@ module.exports = {
         select: "username _id fullname",
       })
         .select("_id title content createAt slug")
+        .sort({createAt: 'desc'})
         .skip(+skip)
         .limit(limit);
 
