@@ -121,7 +121,7 @@ module.exports = {
                 name,
                 description,
                 status,
-                updateAt: Date.now()
+                updatedAt: Date.now()
             })
             if (!category) return res.status(500).json({
                 status: false,
@@ -151,7 +151,7 @@ module.exports = {
             const { id } = req.params
             const category = await Categories.updateOne(
                 {_id: id}, 
-                {status: "DELETE", updateAt: Date.now()}
+                {status: "DELETE", updatedAt: Date.now()}
             )   
             if (!category) return res.status(500).json({
                 status: false,

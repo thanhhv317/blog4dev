@@ -100,7 +100,7 @@ module.exports = {
         content,
         status,
         category: categories,
-        updateAt: Date.now(),
+        updatedAt: Date.now(),
       };
       if (thumbnail !== null) {
         dataUpdate.thumbnail = thumbnail;
@@ -135,7 +135,7 @@ module.exports = {
       const { id } = req.params;
       const post = await Posts.updateOne(
         { _id: id },
-        { status: "DELETE", updateAt: Date.now() }
+        { status: "DELETE", updatedAt: Date.now() }
       );
       if (!post)
         return res.status(500).json({
@@ -170,6 +170,7 @@ module.exports = {
         const posts = await Posts.find({
           status: { $ne: "DELETE" },
         })
+          .sort({ createdAt: "desc" })
           .skip(+skip)
           .limit(+limit);
 
@@ -233,7 +234,7 @@ module.exports = {
           },
           select: "username _id fullname",
         })
-        .sort({createAt: 'desc'})
+        .sort({ createdAt: "desc" })
         .skip(+skip)
         .limit(limit);
 
@@ -261,15 +262,16 @@ module.exports = {
       const posts = await Posts.find({
         status: "ACTIVE",
         category: cateId,
-      }).populate({
-        path: "authorId",
-        match: {
-          status: "ACTIVE",
-        },
-        select: "username _id fullname",
       })
-        .select("_id title content createAt slug")
-        .sort({createAt: 'desc'})
+        .populate({
+          path: "authorId",
+          match: {
+            status: "ACTIVE",
+          },
+          select: "username _id fullname",
+        })
+        .select("_id title content createdAt slug")
+        .sort({ createdAt: "desc" })
         .skip(+skip)
         .limit(limit);
 

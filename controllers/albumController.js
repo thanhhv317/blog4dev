@@ -70,7 +70,7 @@ module.exports = {
       const { id } = req.params;
       const album = await Album.updateOne(
         { _id: id },
-        { status: "DELETE", updateAt: Date.now() }
+        { status: "DELETE", updatedAt: Date.now() }
       );
 
       return res.status(200).json({

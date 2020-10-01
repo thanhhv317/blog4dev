@@ -59,7 +59,7 @@ module.exports = {
 
       const user = await Users.update(
         { _id: id },
-        { fullname, birthday, status, updateAt: Date.now() }
+        { fullname, birthday, status, updatedAt: Date.now() }
       );
       if (!user)
         return res.status(500).json({
@@ -116,7 +116,7 @@ module.exports = {
         { _id: id },
         {
           password: hashedPassword,
-          updateAt: Date.now(),
+          updatedAt: Date.now(),
         }
       );
       if (!user)

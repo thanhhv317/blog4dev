@@ -90,7 +90,7 @@ module.exports = {
 
       const cmt = await Comments.updateOne(
         { _id: id },
-        { name, email, comment, status, updateAt: Date.now() }
+        { name, email, comment, status, updatedAt: Date.now() }
       );
       if (!cmt)
         return res.status(500).json({

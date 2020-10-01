@@ -92,7 +92,7 @@ module.exports = {
           fullname: user.fullname,
           level: user.level,
           username: user.username,
-          createAt: user.createAt,
+          createdAt: user.createdAt,
         },
       });
     } catch (e) {
